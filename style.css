@@ -1,0 +1,472 @@
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#16160f;--ink-m:#46463e;--ink-l:#888880;--ink-f:#ceccc0;
+  --page:#fafaf6;--acc:#1e3a6e;--acc-s:#dce5f5;
+  --red:#b03a20;--red-s:#f5e8e4;--grn:#2a5a1e;--grn-s:#e4f0e0;
+  --paper:#fff;--card:#f7f7f3;--vp-bg:#16160f;
+  /* Chart-only tones (gridlines, target/baseline reference lines in the
+     inline SVG charts). Kept separate from --ink-f/--acc/etc so each can be
+     tuned independently for dark mode without changing document dividers
+     or the accent color used elsewhere. */
+  --chart-grid:#e8e6dc;--chart-grid-strong:#c8c6bc;
+  --chart-target:#88c4a4;--chart-baseline:#d4a8a0;
+  --serif:'EB Garamond',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'DM Mono','Courier New',monospace;
+  --desk:#d8d8d4;--chrome-ink:#16160f;--chrome-surface:#fff;
+}
+html{background:var(--page);color:var(--ink)}
+body{font-family:var(--serif);background:var(--page)}
+.page{
+    width:210mm;
+    min-height:297mm;
+    margin:0 auto;
+    padding:15mm 17mm 19mm;
+    background:var(--paper);
+    /* Explicit, not just inherited from html/body: the CSS custom property
+       --ink correctly rescopes per theme, but the computed "color" value
+       only re-reads var(--ink) wherever it's actually declared. Elements
+       with no color of their own (.cn, .cs-t, .ct, .qn, .tn, .pt-t, .ci-v —
+       the cover name, case-study headings, competency/qualification/tool
+       names, project titles, contact values) were inheriting the color
+       *computed at <html>*, frozen at the light value from outside .page's
+       dark-mode scope — rendering as near-invisible dark text on dark
+       paper. Declaring color here, exactly at the dark-mode scoping
+       boundary, makes every descendant's inheritance re-read the correct
+       theme's --ink instead of the one resolved above it. */
+    color:var(--ink);
+    position:relative;
+    display:block;
+    overflow:visible;
+    box-sizing:border-box;
+}
+@media screen{
+  body{padding:2rem 0;background:var(--desk)}
+  .page{box-shadow:0 6px 48px rgba(0,0,0,.13),0 1px 4px rgba(0,0,0,.07);
+        margin-bottom:2rem}
+  /* Dark desk + dark paper sit close in value, so the light-mode shadow
+     (tuned for a light desk) would nearly vanish — deepen it here so the
+     page still reads as a lifted sheet rather than fusing with the desk. */
+  [data-theme="dark"] .page{box-shadow:0 8px 56px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.4)}
+}
+/* ── typography ── */
+.ey{font-family:var(--mono);font-size:9px;font-weight:400;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--ink-l)}
+.rule{border:none;border-top:1px solid var(--ink)}
+.rl{border:none;border-top:.5px solid var(--ink-f)}
+/* ── section header ── */
+.sh{display:flex;align-items:baseline;gap:.6rem;margin:.05rem 0 .9rem}
+.sn{font-family:var(--mono);font-size:9px;color:var(--ink-l);letter-spacing:.06em}
+.st{font-family:var(--mono);font-size:9px;font-weight:400;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--ink-m)}
+/* ── KPI rows ── */
+.kr{display:grid;gap:0;border-top:.5px solid var(--ink-f);
+    border-bottom:.5px solid var(--ink-f)}
+.k4{grid-template-columns:repeat(4,1fr)}
+.k3{grid-template-columns:repeat(3,1fr)}
+.k5{grid-template-columns:repeat(5,1fr)}
+.ki{padding:1rem 0}.ki+.ki{padding-left:1.3rem;border-left:.5px solid var(--ink-f)}
+.kn{font-family:var(--serif);font-size:32px;font-weight:400;
+    letter-spacing:-.03em;line-height:1;color:var(--ink)}
+.kn-lg{font-size:42px}
+.kl{font-family:var(--mono);font-size:8px;text-transform:uppercase;
+    letter-spacing:.1em;color:var(--ink-l);line-height:1.45;margin-top:.15rem}
+/* ── layout ── */
+.tc{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.cl{padding-right:1.75rem}
+.cr{padding-left:1.75rem;border-left:.5px solid var(--ink-f)}
+/* ── label+body ── */
+.lb{font-family:var(--mono);font-size:8.5px;text-transform:uppercase;
+    letter-spacing:.12em;color:var(--ink-l);margin-bottom:.3rem}
+.bd{font-family:var(--sans);font-size:10.8px;line-height:1.68;color:var(--ink-m)}
+.sc{margin-bottom:.95rem}
+/* ── bullets ── */
+.bl{list-style:none}
+.bl li{font-family:var(--sans);font-size:10.5px;line-height:1.62;
+       color:var(--ink-m);padding:.15rem 0 .15rem .9rem;position:relative}
+.bl li::before{content:'—';position:absolute;left:0;color:var(--ink-f)}
+.bl li strong{color:var(--ink);font-weight:500}
+/* ── impact bar (bottom stripe) ── */
+.ib{display:flex;border-top:1.5px solid var(--ink);margin-top:1.2rem;
+    padding-top:.95rem;gap:0;background:var(--page);
+    margin-left:-17mm;margin-right:-17mm;
+    padding-left:17mm;padding-right:17mm;padding-bottom:.85rem}
+.ik{flex:1}.ik+.ik{padding-left:1.3rem;border-left:.5px solid var(--ink-f)}
+.in{font-family:var(--serif);font-size:34px;font-weight:400;
+    letter-spacing:-.03em;line-height:1;color:var(--ink)}
+.il{font-family:var(--mono);font-size:8px;text-transform:uppercase;
+    letter-spacing:.1em;color:var(--ink-l);line-height:1.4;margin-top:.18rem}
+/* ── callout ── */
+.ca{background:var(--acc-s);border-left:2px solid var(--acc);
+    padding:.65rem .85rem;margin:.75rem 0}
+.ca p{font-family:var(--serif);font-size:12px;font-style:italic;
+      color:var(--ink-m);line-height:1.62}
+.ca-r{background:var(--red-s);border-left:2px solid var(--red)}
+.ca-g{background:var(--grn-s);border-left:2px solid var(--grn)}
+/* ── evidence panel ── */
+.ev{background:var(--card);border:.5px solid var(--ink-f);padding:.7rem}
+.ev-t{font-family:var(--mono);font-size:8px;text-transform:uppercase;
+      letter-spacing:.12em;color:var(--ink-l);margin-bottom:.4rem}
+.ev-c{font-family:var(--mono);font-size:7.5px;text-transform:uppercase;
+      letter-spacing:.1em;color:var(--ink-l);margin-top:.35rem;text-align:center}
+/* ── project index rows ── */
+.pt{display:grid;grid-template-columns:28px 1fr 100px;gap:0;
+    border-top:.5px solid var(--ink-f);padding:.9rem 0;align-items:start}
+.pt:last-child{border-bottom:.5px solid var(--ink-f)}
+.pt-n{font-family:var(--mono);font-size:8px;color:var(--ink-l);padding-top:2px}
+.pt-t{font-family:var(--serif);font-size:15px;font-weight:500;line-height:1.15}
+.pt-m{font-family:var(--mono);font-size:8px;text-transform:uppercase;
+      letter-spacing:.07em;color:var(--ink-l);margin:.2rem 0 .4rem}
+.pt-d{font-family:var(--sans);font-size:10.3px;line-height:1.62;color:var(--ink-m)}
+.pt-k{text-align:right}
+.pt-kn{font-family:var(--serif);font-size:22px;font-weight:400;
+       letter-spacing:-.02em;display:block;line-height:1;color:var(--ink)}
+.pt-kl{font-family:var(--mono);font-size:7.5px;text-transform:uppercase;
+       letter-spacing:.1em;color:var(--ink-l);line-height:1.4}
+/* ── case study header ── */
+.cs-s{font-family:var(--mono);font-size:8.5px;text-transform:uppercase;
+      letter-spacing:.14em;color:var(--ink-l);margin-bottom:.3rem}
+.cs-t{font-family:var(--serif);font-size:28px;font-weight:400;
+      line-height:1.02;letter-spacing:-.02em}
+.cs-t em{font-style:italic;color:var(--ink-m)}
+.cs-r{font-family:var(--sans);font-size:10px;color:var(--ink-l);margin-top:.35rem}
+/* ── before/after grid ── */
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.6rem 0}
+.ba-b{border:.5px solid var(--ink-f);padding:.6rem .7rem}
+.ba-lbl{font-family:var(--mono);font-size:8px;text-transform:uppercase;
+        letter-spacing:.1em;margin-bottom:.25rem}
+.ba-r{color:var(--red)}.ba-g{color:var(--grn)}
+/* ── "why" cards ── */
+.wg{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.wc{padding:.85rem 0;border-top:.5px solid var(--ink-f)}
+.wc:nth-child(odd){padding-right:1.75rem}
+.wc:nth-child(even){padding-left:1.75rem;border-left:.5px solid var(--ink-f)}
+.ws{font-family:var(--sans);font-size:9.5px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.05em;color:var(--ink);margin-bottom:.2rem}
+.wa{font-family:var(--serif);font-size:10px;color:var(--ink-l);
+    font-style:italic;margin-bottom:.2rem}
+.wr{font-family:var(--sans);font-size:10.5px;line-height:1.6;color:var(--ink-m)}
+/* ── competency cards ── */
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.cc{padding:.8rem 0;border-top:.5px solid var(--ink-f)}
+.cc:nth-child(odd){padding-right:1.75rem}
+.cc:nth-child(even){padding-left:1.75rem;border-left:.5px solid var(--ink-f)}
+.ct{font-family:var(--serif);font-size:13px;font-weight:500;margin-bottom:.18rem}
+.cb{font-family:var(--sans);font-size:10px;line-height:1.62;color:var(--ink-m)}
+/* ── bar proficiency ── */
+.br{display:flex;align-items:center;gap:.65rem;margin-bottom:.42rem}
+.bl2{font-family:var(--mono);font-size:8.5px;text-transform:uppercase;
+     letter-spacing:.07em;color:var(--ink-m);width:124px;flex-shrink:0}
+.bt{flex:1;height:1.5px;background:var(--ink-f);position:relative}
+.bf{height:1.5px;background:var(--ink);position:absolute;left:0;top:0}
+.bg{font-family:var(--mono);font-size:8px;color:var(--ink-l);
+    width:70px;text-align:right;flex-shrink:0}
+/* ── timeline ── */
+.tl-r{display:grid;grid-template-columns:90px 12px 1fr;gap:0 9px;margin-bottom:.05rem}
+.tl-d{font-family:var(--mono);font-size:8px;color:var(--ink-l);
+      text-align:right;padding-top:3px}
+.tl-do{display:flex;flex-direction:column;align-items:center}
+.tl-di{width:6px;height:6px;border-radius:50%;background:var(--ink);
+       margin-top:3px;flex-shrink:0}
+.tl-dl{width:1px;background:var(--ink-f);flex:1;margin-top:3px;min-height:14px}
+.tl-c{padding-bottom:.85rem}
+.tl-co{font-family:var(--sans);font-size:10.5px;font-weight:600;color:var(--ink)}
+.tl-ro{font-family:var(--serif);font-size:11px;font-style:italic;color:var(--ink-m)}
+.tl-no{font-family:var(--sans);font-size:9.5px;color:var(--ink-l);margin-top:.08rem}
+/* ── quals ── */
+.qs{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.qu{padding:.5rem 0;border-top:.5px solid var(--ink-f)}
+.qu:nth-child(odd){padding-right:1.75rem}
+.qu:nth-child(even){padding-left:1.75rem;border-left:.5px solid var(--ink-f)}
+.qn{font-family:var(--sans);font-size:10px;font-weight:500;margin-bottom:.06rem}
+.qb{font-family:var(--mono);font-size:7.5px;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--ink-l)}
+/* ── tools grid ── */
+.tg{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.to{padding:.6rem 0;border-top:.5px solid var(--ink-f)}
+.to:nth-child(4n+2),.to:nth-child(4n+3),.to:nth-child(4n){
+  padding-left:.85rem;border-left:.5px solid var(--ink-f)}
+.tn{font-family:var(--sans);font-size:10px;font-weight:500;margin-bottom:.05rem}
+.tc2{font-family:var(--mono);font-size:7.5px;text-transform:uppercase;
+     letter-spacing:.1em;color:var(--ink-l)}
+/* ── contact ── */
+.ci-l{font-family:var(--mono);font-size:8px;text-transform:uppercase;
+      letter-spacing:.1em;color:var(--ink-l);margin-bottom:.15rem}
+.ci-v{font-family:var(--serif);font-size:13px;font-style:italic}
+/* ── value prop box ── */
+.vp{background:var(--vp-bg);color:#fff;padding:.9rem 1.1rem;margin:1.1rem 0}
+.vp p{font-family:var(--serif);font-size:14px;font-style:italic;
+      line-height:1.72;color:rgba(255,255,255,.9)}
+.vp strong{color:#fff;font-style:normal}
+/* ── cover name ── */
+.cn{font-family:var(--serif);font-size:56px;font-weight:400;
+    line-height:.9;letter-spacing:-.03em}
+.cn em{font-style:italic;color:var(--ink-m)}
+/* ── process flow ── */
+.fl{display:flex;align-items:center;gap:0;margin:.5rem 0}
+.fb{font-family:var(--mono);font-size:8px;text-transform:uppercase;
+    letter-spacing:.08em;background:var(--acc-s);color:var(--acc);
+    padding:.3rem .5rem;border:.5px solid var(--acc);flex:1;
+    text-align:center;line-height:1.35}
+.fa{font-family:var(--mono);font-size:10px;color:var(--ink-f);
+    padding:0 .28rem;flex-shrink:0}
+/* ── page footer ── */
+.pf{
+    margin-top:8mm;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position:static;
+}
+/* Was var(--ink-f) — the border/divider token, ~1.4-1.6:1 against paper in
+   either theme. Footer text (running title + page number) is real content
+   a reader may need, not a decorative rule, so it uses the same --ink-l
+   "label" tier as every other caption on the page (~5-6:1, passes AA with
+   margin in both themes). */
+.pf-l,.pf-r{font-family:var(--mono);font-size:8px;color:var(--ink-l)}
+/* ── exec-summary KPI card height reduction (p2 only) ── */
+#p2 .ki { padding: .78rem 0; }
+
+/* ── density overrides: p5 (P2+P3) and p8 (P5+P6) carry two case studies each ── */
+#p5 .sc, #p8 .sc { margin-bottom: .45rem; }
+#p5 .ev, #p8 .ev { padding: .45rem !important; }
+#p5 .ev-c, #p8 .ev-c { margin-top: .2rem !important; line-height: 1.35; }
+#p5 .bl li, #p8 .bl li { padding: .08rem 0 .08rem .9rem; line-height: 1.45; }
+#p5 .bd, #p8 .bd { line-height: 1.5; }
+#p5 hr.rl, #p8 hr.rl { margin: .4rem 0 !important; }
+#p5 .ib, #p8 .ib { margin-top: .55rem !important; padding-top: .6rem !important; }
+#p8 .mini-kr { margin-top: .35rem !important; }
+#p8 .ca { margin-top: .3rem !important; padding: .4rem .6rem !important; }
+#p8 .ca p { font-size: 11px; line-height: 1.45; }
+
+/* ── p3 whitespace balance: fill vertical space evenly across the 8 cards ── */
+#p3 .wc { padding-top: 1.35rem; padding-bottom: 1.35rem; }
+#p3 .wr { line-height: 1.72; }
+#p3 .ca { margin-top: 1.8rem; padding: .85rem 1rem; }
+#p3 .ca p { font-size: 12.5px; line-height: 1.7; }
+
+/* ── p7 whitespace balance: stretch content to reduce the gap above the impact bar ── */
+#p7 .cl .sc:not(:last-child) { margin-bottom: 1.3rem; }
+#p7 .bd { line-height: 1.78; }
+#p7 .bl li { padding-top: .28rem; padding-bottom: .28rem; line-height: 1.75; }
+#p7 .cr .sc:first-child { margin-bottom: 1.4rem; }
+#p7 .cr .bd { line-height: 1.8; margin-bottom: .8rem; }
+#p7 .ca { margin-top: 1.4rem; padding: .9rem 1.1rem; }
+#p7 .ca p { font-size: 12.5px; line-height: 1.75; }
+#p7 .ba { margin-top: 1.4rem !important; }
+#p7 .ib { margin-top: 1.6rem; }
+
+/* ── nav (screen only) ── */
+.nav{position:fixed;bottom:1.5rem;right:1.5rem;display:flex;
+     flex-direction:column;gap:.3rem;z-index:200}
+.nav a,.nav button{font-family:var(--mono);font-size:8px;text-transform:uppercase;
+  letter-spacing:.1em;background:var(--ink);color:#fff;border:none;
+  padding:5px 10px;cursor:pointer;text-decoration:none;display:block;text-align:center;
+  transition:background-color .15s ease,transform .1s ease}
+.nav a:hover,.nav button:hover{background:var(--acc)}
+.nav a:active,.nav button:active{transform:scale(.96)}
+.nav a[aria-current="true"]{background:var(--acc)}
+.nav .pb{background:var(--red);margin-top:.3rem}
+.nav .pb:hover{background:#8a2c18}
+/* ── inline KPI strip (3 across inside a col) ── */
+.mini-kr{display:grid;gap:0;border-top:.5px solid var(--ink-f);
+         border-bottom:.5px solid var(--ink-f);margin:.6rem 0}
+.mini-k3{grid-template-columns:repeat(3,1fr)}
+.mini-k2{grid-template-columns:repeat(2,1fr)}
+.mki{padding:.6rem 0}
+.mki+.mki{padding-left:1rem;border-left:.5px solid var(--ink-f)}
+.mkn{font-family:var(--serif);font-size:22px;font-weight:400;
+     letter-spacing:-.02em;line-height:1;color:var(--ink)}
+.mkl{font-family:var(--mono);font-size:7.5px;text-transform:uppercase;
+     letter-spacing:.09em;color:var(--ink-l);line-height:1.4;margin-top:.1rem}
+
+/* ── print-fit & polish layer (screen too: never crop charts/images) ── */
+svg, img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+.sc, .wc, .cc, .qu, .to, .ki, .ik, .mki, .pt, .ba-b {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+.ca, .ev {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+.tc, .cg, .wg, .qs { break-inside: auto; }
+.sh, .lb, .cs-s, .ct, .ws { break-after: avoid; page-break-after: avoid; }
+p, li, .bd, .wr, .cb, .pt-d { orphans: 3; widows: 3; }
+.tc, .wg, .cg, .qs, .tg, .ba { align-items: start; }
+.sc { margin-bottom: 1rem; }
+.sc:last-child { margin-bottom: 0; }
+.ki { white-space: normal; overflow-wrap: break-word; }
+
+/* ══════════════════════════════════════════════════════════════
+   v1.0 additions — dark chrome, accessibility, UX chrome
+   The paper (.page) itself always stays white/cream, in every
+   theme — only the surrounding desk/nav/buttons change.
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── reduced motion & theme transition guard ── */
+@media (prefers-reduced-motion: no-preference) {
+  html{scroll-behavior:smooth}
+  body,.nav a,.nav button,.action-bar a,.action-bar button,.progress-bar__fill{
+    transition:background-color .2s ease,color .2s ease,border-color .2s ease;
+  }
+}
+
+/* ── skip link ── */
+.skip-link{
+  position:fixed;top:-3rem;left:1rem;z-index:1000;
+  background:var(--ink);color:#fff;font-family:var(--mono);
+  font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  padding:.6rem 1rem;transition:top .15s ease;
+}
+.skip-link:focus{top:1rem}
+
+/* ── focus visibility (none existed before) ── */
+a:focus-visible,button:focus-visible{
+  outline:2px solid var(--acc);outline-offset:2px;
+}
+/* The nav/action-bar/back-to-top/theme-toggle/skip-link controls live
+   outside .page, so in dark mode they still read the root (light-mode)
+   --acc navy — which is nearly the same dark navy as the dark chrome
+   surfaces around it (~1.4:1, well under the ~3:1 a focus ring needs to
+   stay visible). Give chrome controls a lighter ring color in dark mode. */
+[data-theme="dark"] .nav a:focus-visible,
+[data-theme="dark"] .nav button:focus-visible,
+[data-theme="dark"] .action-bar a:focus-visible,
+[data-theme="dark"] .action-bar button:focus-visible,
+[data-theme="dark"] .skip-link:focus-visible{
+  outline-color:#7ea3d9;
+}
+
+/* ── dark chrome theme ── */
+[data-theme="dark"]{
+  --desk:#0f1420;--chrome-ink:#f3f2ec;--chrome-surface:#1a2233;
+}
+[data-theme="dark"] body{background:var(--desk)}
+[data-theme="dark"] .nav a,
+[data-theme="dark"] .nav button{background:var(--chrome-surface);color:var(--chrome-ink)}
+/* !important here is deliberate: this must always win over the plain
+   "[data-theme="dark"] .nav a" background rule above, or the active-page
+   highlight silently disappears in dark mode. Both rules set the same
+   property on the same element, and relying on selector-specificity
+   tie-breaking alone proved unreliable across renderers, so the state
+   is pinned explicitly rather than left to cascade order. */
+[data-theme="dark"] .nav a[aria-current="true"]{background:var(--acc) !important;color:#fff !important}
+[data-theme="dark"] .nav a:hover,
+[data-theme="dark"] .nav button:hover{background:var(--acc);color:#fff}
+[data-theme="dark"] .nav .pb{background:var(--red)}
+[data-theme="dark"] .progress-bar{background:rgba(255,255,255,.08)}
+[data-theme="dark"] .action-bar a,
+[data-theme="dark"] .action-bar button{background:var(--chrome-surface);color:var(--chrome-ink);border-color:rgba(255,255,255,.14)}
+[data-theme="dark"] .action-bar a:hover,
+[data-theme="dark"] .action-bar button:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+[data-theme="dark"] .action-bar .copy-feedback{color:#8fc27a}
+[data-theme="dark"] ::selection{background:var(--acc);color:#fff}
+
+/* ── dark paper (the pages themselves) ──
+   A genuine reading-mode palette, not an inverted one: warm dark gray
+   "paper" with warm off-white ink, in the spirit of Apple Books / Kindle
+   dark mode rather than a straight color inversion. Scoped to .page so
+   it only touches page content — every rule below already reads these
+   same custom properties (--ink, --page, --acc, --card, etc.), so the
+   whole document (KPIs, callouts, cards, labels, borders) repaints for
+   free. Photos/diagrams are left untouched ("images remain natural"). */
+[data-theme="dark"] .page{
+  --paper:#1e1c1a;
+  --page:#1e1c1a;
+  --ink:#e8e3d9;
+  --ink-m:#b6b0a3;
+  /* ink-l is the "quietest readable tier" — used everywhere for captions,
+     metadata, footers, page numbers, KPI labels. #8f8a7d measured 4.93:1
+     on paper / 4.59:1 on cards: technically AA, but with almost no margin
+     for the smallest caption sizes (7.5-8px) used throughout. Brightened
+     for real headroom (5.85:1 / 5.44:1) while staying visibly dimmer than
+     --ink-m so the ink > ink-m > ink-l hierarchy still reads correctly. */
+  --ink-l:#9d978b;
+  --ink-f:#3a3632;
+  --card:#26221e;
+  --acc:#7ea3d9;
+  --acc-s:#1f2b40;
+  --red:#e2836a;
+  --red-s:#3a231c;
+  --grn:#8fc27a;
+  --grn-s:#20301a;
+  --vp-bg:#33507e;
+  /* Chart-only tones — not a filter/invert, hand-picked per role: minor
+     gridlines and the strong top/bottom bounds stay as quiet in dark mode
+     as they were in light mode (relatively), while the semantic target-
+     line green and baseline-line red are brightened enough to actually
+     read as meaningful reference lines against dark paper. */
+  --chart-grid:#332f2a;
+  --chart-grid-strong:#4a453c;
+  --chart-target:#6ba883;
+  --chart-baseline:#b8776a;
+}
+
+/* ── scroll progress bar ── */
+.progress-bar{
+  position:fixed;top:0;left:0;width:100%;height:3px;
+  background:rgba(0,0,0,.06);z-index:300;
+}
+.progress-bar__fill{
+  height:100%;width:0%;background:var(--acc);
+}
+
+/* ── floating action bar (resume / linkedin / contact / copy email) ── */
+.action-bar{
+  position:fixed;bottom:1.5rem;left:1.5rem;display:flex;
+  flex-wrap:wrap;gap:.4rem;max-width:calc(100% - 3rem);z-index:200;
+}
+.action-bar a,.action-bar button{
+  font-family:var(--mono);font-size:8px;text-transform:uppercase;
+  letter-spacing:.08em;background:#fff;color:var(--ink);
+  border:.5px solid var(--ink-f);padding:6px 10px;cursor:pointer;
+  text-decoration:none;display:inline-flex;align-items:center;gap:.35rem;
+}
+.action-bar a:hover,.action-bar button:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+.action-bar a:active,.action-bar button:active{transform:scale(.96)}
+.action-bar .copy-feedback{
+  font-family:var(--mono);font-size:8px;color:var(--grn);
+  letter-spacing:.06em;align-self:center;
+}
+
+/* ── back to top ──
+   Lives as the first item inside .nav's own fixed flex column (not an
+   independently-positioned fixed element) so it can never overlap the
+   page-link stack below it — the two used to share the exact same
+   bottom:1.5rem;right:1.5rem anchor and sat directly on top of each other.
+   Base button look (background/hover/active) comes for free from the
+   ".nav a,.nav button" rule above; only the scroll-triggered fade is added here. */
+.back-to-top{
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .2s ease,transform .2s ease,visibility .2s,background-color .15s ease;
+}
+.back-to-top.is-visible{opacity:1;visibility:visible;transform:translateY(0)}
+
+/* The .page itself stays a fixed 210mm "sheet" at every viewport width (by design —
+   this is a printed-document layout, not a reflowing one), so on narrow screens the
+   page content already requires horizontal scroll. The two fixed corner clusters
+   (.nav bottom-right, .action-bar bottom-left) would collide on a phone-width
+   viewport, so on narrow screens the action bar moves to a top-center dock,
+   clear of the nav entirely, without touching the desktop layout. */
+@media (max-width: 640px){
+  .action-bar{
+    top:.75rem;bottom:auto;left:50vw;right:auto;
+    transform:translateX(-50%);
+    max-width:calc(100vw - 1.5rem);
+    justify-content:center;
+  }
+}
+
+/* ── one-time scroll reveal (subtle, respects reduced motion) ──
+   Scoped to html.js (set synchronously by the inline head script)
+   so pages are never hidden if JavaScript fails to load. ── */
+@media (prefers-reduced-motion: no-preference){
+  html.js .page{opacity:0;transform:translateY(10px);
+        transition:opacity .5s ease,transform .5s ease}
+  html.js .page.is-revealed{opacity:1;transform:translateY(0)}
+}

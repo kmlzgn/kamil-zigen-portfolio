@@ -1,0 +1,76 @@
+/* Loaded only for print (media="print" on the <link>) — no @media wrapper needed */
+
+body{background:#fff;padding:0}
+.page{box-shadow:none;margin:0;page-break-after:always}
+.no-print{display:none}
+
+/* Root cause of "blank pages unless you scroll first": style.css's
+   one-time scroll-reveal animation starts every .page at
+   opacity:0;transform:translateY(10px) and only removes it once an
+   IntersectionObserver sees the page enter the viewport. A page that was
+   never scrolled to has never been revealed, so it prints exactly as
+   invisible as it looked on screen. This reset is unconditional (not
+   scoped to html.js or reduced-motion, unlike the rule it's cancelling)
+   and !important, so printing can never depend on scroll position or on
+   JavaScript having run at all — script.js's beforeprint handler below
+   is a second, belt-and-suspenders layer for the same guarantee. */
+.page{opacity:1 !important;transform:none !important}
+
+/* Force light paper on paper, always — regardless of active screen theme.
+   Dark mode's custom-property overrides live on "[data-theme="dark"] .page"
+   / "[data-theme="dark"] body" in style.css. A plain "body{background:#fff}"
+   above has LOWER specificity than those attribute-qualified selectors, so
+   it silently loses the cascade and the dark theme prints as-is. The
+   selectors below match the html[data-theme] attribute too so they win on
+   specificity — and carry !important as a second, unambiguous guarantee,
+   since this must never silently regress into printing a dark page. */
+html[data-theme="dark"] body{background:#fff !important}
+html[data-theme="dark"] .page{
+  --paper:#fff !important;--page:#fff !important;
+  --ink:#16160f !important;--ink-m:#46463e !important;--ink-l:#888880 !important;--ink-f:#ceccc0 !important;
+  --card:#f7f7f3 !important;--acc:#1e3a6e !important;--acc-s:#dce5f5 !important;
+  --red:#b03a20 !important;--red-s:#f5e8e4 !important;--grn:#2a5a1e !important;--grn-s:#e4f0e0 !important;
+  --vp-bg:#16160f !important;
+}
+
+#p5, #p8 { padding: 10mm 14mm 12mm !important; }
+#p5 .tc, #p8 .tc { margin-top: .3rem !important; }
+#p5 .lb, #p8 .lb { margin-bottom: .2rem !important; }
+
+.nav{display:none}
+
+html, body { height: auto; overflow: visible; }
+
+.page {
+  width: 210mm;
+  height: 297mm;
+  padding: 11mm 16mm 13mm;
+  page-break-after: always;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.page:last-child { page-break-after: auto; }
+
+.sc, .wc, .cc, .qu, .to, .ki, .ik, .mki, .pt, .ba-b,
+.ca, .ev, .kr, .ib, .cs-t, .cs-s, .cs-r,
+.mini-kr, img, svg {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.sc { margin-bottom: .7rem; }
+.sh { margin: .04rem 0 .7rem; }
+.kr { margin-bottom: 1.1rem !important; }
+.tc { margin-top: .85rem; }
+.wg, .cg, .qs { margin-top: .1rem; }
+.ib { margin-top: .9rem; padding-top: .7rem; }
+.pf { margin-top: 5mm; }
+
+/* New v1.0 UI chrome must never appear on a printed page */
+.progress-bar,
+.theme-toggle,
+.back-to-top,
+.skip-link,
+.action-bar {
+  display: none !important;
+}

@@ -1,0 +1,6 @@
+# Internal working files — source spreadsheets/photos already extracted
+# into assets/images and the case-study content; not part of the deployed site.
+Projects Data/
+
+# Local dev tooling (preview server config), not part of the deployed site.
+.claude/

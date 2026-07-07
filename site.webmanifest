@@ -1,0 +1,23 @@
+{
+  "name": "Kamil Zigen — Operational Excellence & Manufacturing Transformation",
+  "short_name": "Kamil Zigen",
+  "description": "Manufacturing Leadership Portfolio — Lean Six Sigma Black Belt, CNC Process Engineering, Operational Excellence.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "browser",
+  "lang": "en",
+  "theme_color": "#1e3a6e",
+  "background_color": "#fafaf6",
+  "icons": [
+    {
+      "src": "assets/icons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
